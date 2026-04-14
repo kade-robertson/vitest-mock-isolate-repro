@@ -1,0 +1,46 @@
+name: Reproduce
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-good:
+    name: "vitest@4.1.0-beta.5 (should pass)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm test:good
+
+  test-bad:
+    name: "vitest@4.1.4 (should fail)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+      - run: pnpm install
+      # This job is expected to fail — the bug is the point of this repo.
+      # We use continue-on-error so the workflow stays green while
+      # still showing the failure in the step output.
+      - run: pnpm test:bad
+        id: bad
+        continue-on-error: true
+      - name: Verify the bad version actually failed
+        run: |
+          if [ "${{ steps.bad.outcome }}" != "failure" ]; then
+            echo "::error::Expected vitest@4.1.4 to fail, but it passed."
+            exit 1
+          fi
+          echo "vitest@4.1.4 failed as expected ✓"
