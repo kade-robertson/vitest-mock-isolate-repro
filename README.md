@@ -13,14 +13,15 @@ The module's exports are **not** replaced with `vi.fn()` — the automock is sil
 
 ```sh
 pnpm install
-pnpm test:bad       # vitest@4.1.4 — fails intermittently
+pnpm test:bad       # vitest@4.1.5 — fails intermittently
+pnpm test:v5        # vitest@5.0.0-beta.1 — fails intermittently
 pnpm test:good      # vitest@4.1.0-beta.5 — always passes
 ```
 
-Both versions are installed side-by-side via pnpm aliases (`vitest` and
-`vitest-good`). Each script runs the suite **10 times** and prints a summary.
+Both versions are installed side-by-side via pnpm aliases (`vitest`, `vitest5`,
+and `vitest-good`). Each script runs the suite **10 times** and prints a summary.
 
-For a single run (uses the default `vitest@4.1.4`):
+For a single run (uses the default `vitest@4.1.5`):
 
 ```sh
 pnpm test           # one vitest run
@@ -54,7 +55,8 @@ same worker, the automock is silently skipped.
 
 The regression was introduced in commit [`a8216b00`][commit] ("fix: manual and
 redirect mock shouldn't `load` or `transform` original module",
-[PR #9774][pr]), first released in **v4.1.0-beta.6**.
+[PR #9774][pr]), first released in **v4.1.0-beta.6**. It remains unfixed as of
+v4.1.5 and v5.0.0-beta.1.
 
 [commit]: https://github.com/vitest-dev/vitest/commit/a8216b0014b83612e40ef49f919d5293b68717b3
 [pr]: https://github.com/vitest-dev/vitest/pull/9774

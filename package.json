@@ -9,11 +9,13 @@
 		"test:repeated": "node scripts/test-repeated.mjs",
 		"test:good": "node scripts/test-repeated.mjs --bin node_modules/vitest-good/vitest.mjs",
 		"test:bad": "node scripts/test-repeated.mjs --bin node_modules/vitest/vitest.mjs",
+		"test:v5": "node scripts/test-repeated.mjs --bin node_modules/vitest5/vitest.mjs",
 		"generate": "node gen-repro.mjs"
 	},
 	"devDependencies": {
 		"happy-dom": "20.9.0",
-		"vitest": "4.1.4",
-		"vitest-good": "npm:vitest@4.1.0-beta.5"
+		"vitest": "4.1.5",
+		"vitest-good": "npm:vitest@4.1.0-beta.5",
+		"vitest5": "npm:vitest@5.0.0-beta.1"
 	}
 }
