@@ -15,11 +15,14 @@ The module's exports are **not** replaced with `vi.fn()` — the automock is sil
 pnpm install
 pnpm test:bad       # vitest@4.1.5 — fails intermittently
 pnpm test:v5        # vitest@5.0.0-beta.1 — fails intermittently
+pnpm test:patched   # vitest@4.1.4 + fix — should pass
 pnpm test:good      # vitest@4.1.0-beta.5 — always passes
 ```
 
-Both versions are installed side-by-side via pnpm aliases (`vitest`, `vitest5`,
-and `vitest-good`). Each script runs the suite **10 times** and prints a summary.
+All versions are installed side-by-side via pnpm aliases (`vitest`, `vitest5`,
+`vitest-patched`, and `vitest-good`). The patched version applies the fix from
+[`fix-stale-isolate-mock`][fix-branch] via `pnpm patch`. Each script runs the
+suite **10 times** and prints a summary.
 
 For a single run (uses the default `vitest@4.1.5`):
 
@@ -60,6 +63,7 @@ v4.1.5 and v5.0.0-beta.1.
 
 [commit]: https://github.com/vitest-dev/vitest/commit/a8216b0014b83612e40ef49f919d5293b68717b3
 [pr]: https://github.com/vitest-dev/vitest/pull/9774
+[fix-branch]: https://github.com/kade-robertson/vitest/tree/fix-stale-isolate-mock
 
 ### Root cause
 

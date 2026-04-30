@@ -1,0 +1,2 @@
+patchedDependencies:
+  vitest@4.1.4: patches/vitest@4.1.4.patch

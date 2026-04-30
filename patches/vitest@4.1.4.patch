@@ -1,0 +1,34 @@
+diff --git a/dist/chunks/startVitestModuleRunner.bRl2_oI_.js b/dist/chunks/startVitestModuleRunner.bRl2_oI_.js
+index 37b4b690284e68263811ae9e02b613c1c09cdbb8..7618f702c71ffe8f8b271206f9c553752c683dd9 100644
+--- a/dist/chunks/startVitestModuleRunner.bRl2_oI_.js
++++ b/dist/chunks/startVitestModuleRunner.bRl2_oI_.js
+@@ -553,16 +553,22 @@ class VitestModuleRunner extends viteModuleRunner.ModuleRunner {
+ 		if (mod.meta && "mockedModule" in mod.meta) {
+ 			const mockedModule = mod.meta.mockedModule;
+ 			const mockId = this.mocker.getMockPath(mod.id);
+-			// bypass mock and force "importActual" behavior when:
+-			// - mock was removed by doUnmock (stale mockedModule in meta)
+-			// - self-import: mock factory/file is importing the module it's mocking
+-			const isStale = !this.mocker.getDependencyMock(mod.id);
+-			const isSelfImport = callstack.includes(mockId) || callstack.includes(url) || "redirect" in mockedModule && callstack.includes(mockedModule.redirect);
+-			if (isStale || isSelfImport) {
++			const currentMock = this.mocker.getDependencyMock(mod.id);
++			if (!currentMock) {
+ 				const node = await this.fetchModule(injectQuery(url, "_vitest_original"));
+ 				return this._cachedRequest(node.url, node, callstack, metadata);
+ 			}
+-			mocked = await this.mocker.requestWithMockedModule(url, mod, callstack, mockedModule);
++			const isSelfImport = callstack.includes(mockId) || callstack.includes(url) || "redirect" in currentMock && callstack.includes(currentMock.redirect);
++			if (isSelfImport) {
++				const node = await this.fetchModule(injectQuery(url, "_vitest_original"));
++				return this._cachedRequest(node.url, node, callstack, metadata);
++			}
++			if (currentMock !== mockedModule) {
++				const freshNode = await this.fetchModule(injectQuery(url, "_vitest_original"));
++				mocked = await this.mocker.requestWithMockedModule(url, freshNode, callstack, currentMock);
++			} else {
++				mocked = await this.mocker.requestWithMockedModule(url, mod, callstack, currentMock);
++			}
+ 		} else mocked = await this.mocker.mockedRequest(url, mod, callstack);
+ 		if (typeof mocked === "string") {
+ 			const node = await this.fetchModule(mocked);
