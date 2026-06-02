@@ -15,9 +15,9 @@
 	},
 	"devDependencies": {
 		"happy-dom": "20.9.0",
-		"vitest": "4.1.5",
+		"vitest": "4.1.8",
 		"vitest-good": "npm:vitest@4.1.0-beta.5",
 		"vitest-patched": "npm:vitest@4.1.4",
-		"vitest5": "npm:vitest@5.0.0-beta.1"
+		"vitest5": "npm:vitest@5.0.0-beta.4"
 	}
 }
